@@ -1,10 +1,17 @@
 package com.example.uiapp;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,6 +42,12 @@ public class CameraActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!hasPermissions(PERMISSIONS)) {
+                requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            }
+        }
+
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +55,8 @@ public class CameraActivity extends Activity
                 camera.takePicture(null, null, jpegCallback);
             }
         });
+
+
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
@@ -91,6 +106,63 @@ public class CameraActivity extends Activity
         };
 
     }
+
+    static final int PERMISSIONS_REQUEST_CODE = 1000;
+    String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.hardware.camera", "android.permission.CAMERA"};
+
+    private boolean hasPermissions(String[] permissions) {
+        int result;
+        for (String perms : permissions) {
+            result = ContextCompat.checkSelfPermission(this, perms);
+            if (result == PackageManager.PERMISSION_DENIED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // permission
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean cameraPermissionAccepted = grantResults[0]
+                            == PackageManager.PERMISSION_GRANTED;
+
+                    if (!cameraPermissionAccepted)
+                        showDialogForPermission("실행을 위해 권한 허가가 필요합니다.");
+                }
+                break;
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void showDialogForPermission(String msg) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("알림");
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            }
+        });
+        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                finish();
+            }
+        });
+        builder.create().show();
+    }
+
+
 
 
     public void refreshCamera() {
