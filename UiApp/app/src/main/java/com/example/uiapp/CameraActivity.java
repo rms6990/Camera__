@@ -108,7 +108,7 @@ public class CameraActivity extends Activity
     }
 
     static final int PERMISSIONS_REQUEST_CODE = 1000;
-    String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.hardware.camera", "android.permission.CAMERA"};
+    String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.hardware.camera", "android.permission.CAMERA", "android.permission.INTERNET"};
 
     private boolean hasPermissions(String[] permissions) {
         int result;
@@ -145,7 +145,7 @@ public class CameraActivity extends Activity
     @TargetApi(Build.VERSION_CODES.M)
     private void showDialogForPermission(String msg) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
         builder.setCancelable(false);

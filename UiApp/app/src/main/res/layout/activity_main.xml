@@ -28,6 +28,21 @@
         android:layout_marginBottom="8dp"
         android:text="start"
         android:onClick="onStrat"
+        app:layout_constraintBottom_toTopOf="@+id/startTodayLuck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/startTodayLuck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="TodayLuck"
+        android:onClick="onToday"
         app:layout_constraintBottom_toTopOf="@+id/howTo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
